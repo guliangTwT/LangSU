@@ -62,20 +62,35 @@
 - 安装 fd 的 magic 改为 `0x4C414E47` / `0x5355A5A5`，与 KernelSU 的
   `0xDEADBEEF` / `0xCAFEBABE` 不同，特征串扫描无法直接命中。
 
-## 3. 内核签名指纹（正式分发前必须改）
+## 3. 内核签名指纹（已完成）
 
-`kernel/Kbuild` 里的默认值仍是 KernelSU 官方证书：
+已生成 LangSU 专用签名证书并写入内核，无需再手工替换：
 
 ```make
-LANGSU_EXPECTED_SIZE ?= 0x033b
-LANGSU_EXPECTED_HASH ?= c371061b...
+# kernel/Kbuild
+LANGSU_EXPECTED_SIZE ?= 0x0560
+LANGSU_EXPECTED_HASH ?= adfae3276367abc271533f19e1e60b46681e477781f090b3da43f0a80ed8ffab
 ```
 
-用自己的证书签名后，必须换成对应值，否则内核不认这个 Manager：
+对应证书：
+
+| 项 | 值 |
+| --- | --- |
+| 密钥库 | `signing/langsu-release.jks`（PKCS12，RSA 4096，有效期 30 年） |
+| 别名 | `langsu` |
+| 证书 DN | `CN=LangSU, OU=Release, O=LangSU, L=NA, ST=NA, C=CN` |
+| DER 长度 | 1376 字节（`0x0560`） |
+| SHA-256 | `adfae327...ffab`（与 APK v2 签名指纹一致，已实测核对） |
+
+**密钥库和口令不在仓库里**（`.gitignore` 已排除 `/signing`），需要自己保管并备份。
+构建时会自动读取 `signing/langsu-release.properties` 并使用该证书签名；文件不存在时
+回退到 debug 签名（那样内核不会认这个 Manager）。
+
+如果要换成别的证书，按下面重算并同步改 `kernel/Kbuild`：
 
 ```bash
-apksigner verify --print-certs your.apk   # 取证书 DER
-# 对 DER 做 sha256 -> EXPECTED_HASH；DER 字节数 -> EXPECTED_SIZE（十六进制）
+keytool -exportcert -alias <alias> -keystore <ks> -file cert.der
+# 大小：cert.der 的字节数（十六进制），哈希：该文件的 sha256
 ```
 
 ## 4. 主题与图标
@@ -94,6 +109,21 @@ apksigner verify --print-certs your.apk   # 取证书 DER
 - 原矢量图与 `res/animator/` 的启动动画已删除（位图不需要；空的 `drawable/` 会让 aapt 报错）。
 - 重新生成：`powershell -File scripts/icon/make_icons.ps1 -MagickPath <magick.exe>`（需 ImageMagick 7）。
 - 关于页 Miuix 版对 LOGO 用 `ColorFilter.tint`，彩色图会被压成色块，因此那里改用单色层。
+
+### 4.1 猫娘语气（中文）
+
+中文界面采用"喵~"语气，但**只用在不影响理解的地方**，共 64 条（`scripts/catgirl_strings.ps1`）：
+
+- 加尾巴：标题、状态词、按钮、空状态、刷新提示（「设置喵~」「还没装喵…」「刷新好啦喵~」）。
+- **不加尾巴**：版本号、设备型号、路径、错误详情、`%s` 格式化字符串、技术术语
+  （`SELinux`、`App Profile`、`WebView`、`KSU` 等）——这些需要一眼看懂和复制粘贴。
+
+配合的排版调整：
+
+- `Type.kt` 补全了 body/title/label 的字号、行高与字距，中文加尾巴后每行多一个字符，
+  行高放宽 1~2sp，避免列表行显得拥挤。
+- 底部导航另设 `nav_home` / `nav_superuser` / `nav_module` / `nav_settings` 短标签，
+  因为底栏是 11sp 且 `softWrap=false`，带尾巴会溢出窄屏。其余位置仍显示猫娘版。
 
 ## 5. 文案与链接的处理原则
 
@@ -142,19 +172,22 @@ cd manager && ./gradlew assembleRelease
 | 项目 | 结果 |
 | --- | --- |
 | `:app:assembleDebug` / `:app:assembleRelease`（R8 + CMake 三 ABI） | 通过 |
-| Release APK 体积 / 签名 | 约 4 MB，debug 密钥 v2 签名，可直接安装 |
+| Release APK 体积 / 签名 | 约 4.4 MB，LangSU 专用证书 v2 签名，可直接安装 |
+| APK 签名指纹与内核 `LANGSU_EXPECTED_HASH` | 完全一致（`adfae327...ffab`） |
 | 冷启动（经 `LauncherActivity` 别名） | `Status: ok`，无崩溃 |
 | 隐藏图标 | `resolve-activity` 返回 `No activity found` |
 | 暗码 `*#*#5264#*#*` | 图标恢复 + 通知（id 5264）发出 |
 | 自定义包名 `com.example.weather` + `Weather` | applicationId / label / alias 均正确 |
+| 猫娘文案渲染 | 首页与设置页实测显示正常，无截断 |
 | 全新克隆从零构建 | 111 个任务全部成功 |
 | `scripts/check_project.ps1` | 全部通过 |
 
 **未验证的部分：**
 
 - 内核模块 `langsu.ko` 未编译、未刷入（本机没有内核源码树，也没有对应 KMI 的设备）。
-- Rust daemon `langsud` 未纳入 Release 产物（未完成构建验证）。
-- 因此 Manager 里显示「未安装 / 点击安装」是**预期**的：没有内核模块它就是未安装状态。
+- Rust daemon `langsud` 未纳入 Release 产物（依赖多个 GitHub 源，本机网络拉取失败）。
+- 因此 Manager 里显示「还没装喵…」是**预期**的：没有内核模块它就是未安装状态。
+- 底栏点击在 MuMu 多显示器环境下无法自动化验证，设置页是通过临时改初始页截图确认的。
 
 ## 8. 已知事项
 

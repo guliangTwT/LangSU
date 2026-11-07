@@ -29,6 +29,9 @@ Added on top of upstream:
 - **Different hook signature**: the install-fd magic and the anon-inode names are not the
   KernelSU ones, so scans for the upstream constants do not match.
 - **Pink theme**: sakura accent colour by default, pink icon and splash background.
+- **Catgirl tone (Chinese only)**: headings and status text end in "喵~", while versions,
+  paths, error details and technical terms stay plain so the UI remains readable. The
+  bottom navigation uses short labels to avoid overflow.
 - **No backup export**: `allowBackup` and `fullBackupContent` are off.
 
 Everything else - modules, metamodules, App Profile, su compat, SELinux hiding, su log -
@@ -77,8 +80,13 @@ Stealth build options, all optional:
 ```
 
 The kernel must be built with the same `LANGSU_PACKAGE_NAME`, otherwise the Manager is not
-recognised. See [REFACTOR_NOTES.md](REFACTOR_NOTES.md) for the full list of changes,
-the signature-fingerprint steps and the remaining caveats.
+recognised. See [REFACTOR_NOTES.md](REFACTOR_NOTES.md) for the full list of changes and
+the remaining caveats.
+
+Release builds are signed with the key described in `signing/` (not in this repository).
+The kernel pins that certificate through `LANGSU_EXPECTED_SIZE` / `LANGSU_EXPECTED_HASH`
+in `kernel/Kbuild`, so a build signed with a different key will not be treated as the
+manager. Replace both values if you swap the key.
 
 ## Licences and credits
 

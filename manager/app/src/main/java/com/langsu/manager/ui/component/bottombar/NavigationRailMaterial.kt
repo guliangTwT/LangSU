@@ -53,10 +53,10 @@ fun NavigationRailMaterial(
     val mainPagerState = LocalMainPagerState.current
 
     val items = listOf(
-        Triple(R.string.home, Icons.Filled.Home, Icons.Outlined.Home),
-        Triple(R.string.superuser, Icons.Filled.Shield, Icons.Outlined.Shield),
-        Triple(R.string.module, Icons.Filled.Extension, Icons.Outlined.Extension),
-        Triple(R.string.settings, Icons.Filled.Settings, Icons.Outlined.Settings)
+        Triple(R.string.nav_home, Icons.Filled.Home, Icons.Outlined.Home),
+        Triple(R.string.nav_superuser, Icons.Filled.Shield, Icons.Outlined.Shield),
+        Triple(R.string.nav_module, Icons.Filled.Extension, Icons.Outlined.Extension),
+        Triple(R.string.nav_settings, Icons.Filled.Settings, Icons.Outlined.Settings)
     )
 
     val settingsRepo = remember { SettingsRepositoryImpl() }

@@ -136,10 +136,10 @@ enum class BottomBarDestination(
     @get:StringRes val label: Int,
     val icon: ImageVector,
 ) {
-    Home(R.string.home, Icons.Rounded.Cottage),
-    SuperUser(R.string.superuser, Icons.Rounded.Security),
-    Module(R.string.module, Icons.Rounded.Extension),
-    Setting(R.string.settings, Icons.Rounded.Settings)
+    Home(R.string.nav_home, Icons.Rounded.Cottage),
+    SuperUser(R.string.nav_superuser, Icons.Rounded.Security),
+    Module(R.string.nav_module, Icons.Rounded.Extension),
+    Setting(R.string.nav_settings, Icons.Rounded.Settings)
 }
 
 internal fun navigationBadgeFor(

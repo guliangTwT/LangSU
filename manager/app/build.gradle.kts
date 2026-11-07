@@ -2,6 +2,7 @@
 
 import com.google.protobuf.gradle.id
 import java.security.MessageDigest
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.agp.app)
@@ -54,6 +55,26 @@ val managerPackageName = project.findProperty("LANGSU_PACKAGE_NAME")?.toString()
         defaultManagerPackageName
     }
 val managerName = project.findProperty("LANGSU_NAME")?.toString() ?: defaultManagerName
+
+// Local signing key. `signing/langsu-release.properties` (git-ignored) points at the
+// keystore; without it the apksign plugin falls back to the debug key. The kernel only
+// trusts builds signed with this key - see LANGSU_EXPECTED_SIZE/HASH in kernel/Kbuild.
+run {
+    val propsFile = rootProject.file("../signing/langsu-release.properties")
+    if (propsFile.isFile) {
+        // `java.util.Properties` cannot be referenced inline here: `java` resolves to the
+        // Gradle Java plugin extension inside a build script, so it is imported above.
+        val props = Properties()
+        propsFile.inputStream().use { props.load(it) }
+        listOf("KEYSTORE_FILE", "KEYSTORE_PASSWORD", "KEY_ALIAS", "KEY_PASSWORD").forEach { key ->
+            val value = props.getProperty(key)
+            if (!value.isNullOrBlank()) {
+                project.extensions.extraProperties.set(key, value)
+            }
+        }
+        logger.lifecycle("LangSU: signing with ${props.getProperty("KEYSTORE_FILE")}")
+    }
+}
 
 apksign {
     storeFileProperty = "KEYSTORE_FILE"

@@ -137,8 +137,13 @@ LANGSU_PACKAGE_NAME ?= com.langsu.manager
 else
 LANGSU_PACKAGE_NAME ?= com.langsu.manager.pr
 endif
-LANGSU_EXPECTED_SIZE ?= 0x033b
-LANGSU_EXPECTED_HASH ?= c371061b19d8c7d7d6133c6a9bafe198fa944e50c1b31c9d8daa8d7f1fc2d2d6
+
+# Signature of the LangSU release key (signing/langsu-release.jks).
+# Regenerate after replacing the key:
+#   keytool -exportcert -alias <alias> -keystore <ks> -file cert.der
+#   size = byte length of cert.der in hex, hash = sha256 of the same file.
+LANGSU_EXPECTED_SIZE ?= 0x0560
+LANGSU_EXPECTED_HASH ?= adfae3276367abc271533f19e1e60b46681e477781f090b3da43f0a80ed8ffab
 
 $(info -- LangSU Manager package name: $(LANGSU_PACKAGE_NAME))
 $(info -- LangSU Manager signature size: $(LANGSU_EXPECTED_SIZE))

@@ -344,4 +344,8 @@
     <string name="nav_rail_collapse">Collapse navigation rail</string>
     <string name="settings_navigation_badge">Navigation badge</string>
     <string name="settings_navigation_badge_summary">Show granted app and enabled module counts on the navigation bar</string>
+    <string name="nav_home" translatable="false">Home</string>
+    <string name="nav_superuser" translatable="false">Superuser</string>
+    <string name="nav_module" translatable="false">Modules</string>
+    <string name="nav_settings" translatable="false">Settings</string>
 </resources>
