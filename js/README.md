@@ -107,7 +107,7 @@ Request the WebView to set padding to 0 or safeDrawing insets
 
 - tips: this is disabled by default but if you request resource from `internal/insets.css`, this will be enabled automatically.
 - To get insets value and enable this automatically, you can
-  - add `@import "https://mui.langsu.dev/internal/insets.css";` in css OR
+  - add `@import "https://mui.github.com/GuLiang-I/LangSU/internal/insets.css";` in css OR
   - add `<link rel="stylesheet" type="text/css" href="/internal/insets.css" />` in html.
 
 ```javascript

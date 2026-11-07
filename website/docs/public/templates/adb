@@ -1,7 +1,7 @@
 {
     "id":"adb",
     "name":"Adb",
-    "author":"langsu.org",
+    "author":"github.com/GuLiang-I/LangSU",
     "description":"Minimal rules required by most apps using ADB privilege.",
     "uid":2000,
     "gid":2000,

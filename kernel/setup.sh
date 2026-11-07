@@ -39,7 +39,7 @@ perform_cleanup() {
 # Sets up or update LangSU environment
 setup_langsu() {
     echo "[+] Setting up LangSU..."
-    test -d "$GKI_ROOT/LangSU" || git clone https://github.com/langsu-dev/LangSU && echo "[+] Repository cloned."
+    test -d "$GKI_ROOT/LangSU" || git clone https://github.com/GuLiang-I/LangSU && echo "[+] Repository cloned."
     cd "$GKI_ROOT/LangSU"
     git stash && echo "[-] Stashed current changes."
     if [ "$(git status | grep -Po 'v\d+(\.\d+)*' | head -n1)" ]; then

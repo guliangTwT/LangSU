@@ -53,7 +53,9 @@ internal suspend fun isDownloadAvailable(uri: Uri): Boolean = withContext(Dispat
 
 fun checkNewVersion(): LatestVersionInfo {
     if (!isNetworkAvailable(langsuApp)) return LatestVersionInfo()
-    val url = "https://api.github.com/repos/tiann/KernelSU/releases/latest"
+    // Must point at this fork. The upstream endpoint would advertise KernelSU builds,
+    // and "update" would then hand the user a different app.
+    val url = "https://api.github.com/repos/GuLiang-I/LangSU/releases/latest"
     // default null value if failed
     val defaultValue = LatestVersionInfo()
     runCatching {

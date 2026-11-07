@@ -25,7 +25,7 @@
     <string name="safe_mode">Saugus rėžimas</string>
     <string name="reboot_to_apply">Paleiskite iš naujo, kad įsigaliotų</string>
     <string name="module_magisk_conflict">Moduliai yra išjungti, nes jie konfliktuoja su Magisk\'s!</string>
-    <string name="home_learn_langsu_url">https://langsu.dev/guide/what-is-kernelsu.html</string>
+    <string name="home_learn_langsu_url">https://github.com/GuLiang-I/LangSU</string>
     <string name="home_learn_langsu">Sužinokite apie LangSU</string>
     <string name="home_click_to_learn_langsu">Sužinokite, kaip įdiegti LangSU ir naudoti modulius</string>
     <string name="about_source_code">Peržiūrėkite šaltinio kodą %1$s<br/>Prisijunkite prie mūsų %2$s kanalo</string>

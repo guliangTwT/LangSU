@@ -14,10 +14,13 @@ import com.langsu.manager.ui.navigation3.LocalNavigator
 fun AboutScreen() {
     val navigator = LocalNavigator.current
     val uriHandler = LocalUriHandler.current
+    // Only links that actually resolve for this project belong here. The upstream
+    // KernelSU chat/website are intentionally not linked: they are not LangSU support
+    // channels and sending users there would be misleading.
     val htmlString = stringResource(
         id = R.string.about_source_code,
-        "<b><a href=\"https://github.com/tiann/KernelSU\">GitHub</a></b>",
-        "<b><a href=\"https://t.me/KernelSU\">Telegram</a></b>"
+        "<b><a href=\"https://github.com/GuLiang-I/LangSU\">GitHub</a></b>",
+        "GPL-2.0"
     )
     val state = AboutUiState(
         title = stringResource(R.string.about),

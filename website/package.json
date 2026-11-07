@@ -1,9 +1,9 @@
 {
   "name": "LangSU_website",
   "version": "1.0.0",
-  "description": "LangSU official website: https://langsu.dev",
+  "description": "LangSU official website: https://github.com/GuLiang-I/LangSU",
   "main": "index.js",
-  "repository": "https://github.com/langsu-dev/LangSU",
+  "repository": "https://github.com/GuLiang-I/LangSU",
   "author": "LangSU",
   "license": "MIT",
   "devDependencies": {

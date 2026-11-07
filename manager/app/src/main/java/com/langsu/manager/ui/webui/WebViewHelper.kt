@@ -90,7 +90,7 @@ internal suspend fun prepareWebView(
 
             val webRoot = File("${webUIState.modDir}/webroot")
             val webViewAssetLoader = WebViewAssetLoader.Builder()
-                .setDomain("mui.langsu.org")
+                .setDomain("mui.kernelsu.org")
                 .addPathHandler(
                     "/",
                     SuFilePathHandler(

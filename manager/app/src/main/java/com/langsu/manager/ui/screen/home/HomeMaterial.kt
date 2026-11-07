@@ -364,8 +364,10 @@ private fun SupportLinks(
 
     SegmentedColumn(modifier = modifier.fillMaxWidth()) {
         item {
+            // Points at the upstream project on purpose: this fork has no donation
+            // channel, and the previous target was the upstream author's page.
             SegmentedListItem(
-                onClick = { onOpenUrl("https://patreon.com/weishu") },
+                onClick = { onOpenUrl("https://github.com/tiann/KernelSU") },
                 headlineContent = { Text(stringResource(R.string.home_support_title)) },
                 supportingContent = { Text(stringResource(R.string.home_support_content)) },
                 leadingContent = {

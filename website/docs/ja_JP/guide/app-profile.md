@@ -119,5 +119,5 @@ LangSU マネージャーの設定画面には「Umount modules by default」と
 2. 「Umount modules by default」を無効にし、アンマウントしたいアプリでのみ個別に「Umount modules」を有効にする（ブラックリスト方式）。
 
 ::: info
-カーネル 5.10 以降を実行しているデバイスでは、カーネルが追加の処理なしにモジュールをアンマウントします。一方 5.10 未満のデバイスでは、このオプションは設定値を示すだけで LangSU は何もしません。5.10 より前のカーネルで「Umount modules」を使いたい場合は、`fs/namespace.c` にある `path_umount` 関数をバックポートする必要があります。詳細は [Integrate for non-GKI devices](https://langsu.dev/guide/how-to-integrate-for-non-gki.html#how-to-backport-path_umount) ページの末尾を参照してください。Zygislangsu など一部モジュールも、モジュールをアンマウントすべきかどうかを判断するためにこのオプションを参照します。
+カーネル 5.10 以降を実行しているデバイスでは、カーネルが追加の処理なしにモジュールをアンマウントします。一方 5.10 未満のデバイスでは、このオプションは設定値を示すだけで LangSU は何もしません。5.10 より前のカーネルで「Umount modules」を使いたい場合は、`fs/namespace.c` にある `path_umount` 関数をバックポートする必要があります。詳細は [Integrate for non-GKI devices](https://github.com/GuLiang-I/LangSU/guide/how-to-integrate-for-non-gki.html#how-to-backport-path_umount) ページの末尾を参照してください。Zygislangsu など一部モジュールも、モジュールをアンマウントすべきかどうかを判断するためにこのオプションを参照します。
 :::

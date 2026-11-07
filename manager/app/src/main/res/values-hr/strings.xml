@@ -43,7 +43,7 @@
     <string name="module_author">Autor</string>
     <string name="module_magisk_conflict">Module su isključene jer je u sukobu sa Magisk-om!</string>
     <string name="home_learn_langsu">Naučite LangSU</string>
-    <string name="home_learn_langsu_url">https://langsu.dev/guide/what-is-kernelsu.html</string>
+    <string name="home_learn_langsu_url">https://github.com/GuLiang-I/LangSU</string>
     <string name="home_click_to_learn_langsu">Naučite kako da instalirate LangSU i da koristite module.</string>
     <string name="home_support_title">Podržite Nas</string>
     <string name="home_support_content">LangSU je i uvijek će biti besplatan i otvorenog koda. Međutim, možete nam pokazati da vam je stalo donacijom.</string>

@@ -47,7 +47,7 @@
     <string name="reboot_to_apply">Рестартирай за да приеме ефект</string>
     <string name="module_magisk_conflict">Модулите не са налични поради конфликт с Magisk!</string>
     <string name="home_learn_langsu">Научи LangSU</string>
-    <string name="home_learn_langsu_url">https://langsu.dev/guide/what-is-kernelsu.html</string>
+    <string name="home_learn_langsu_url">https://github.com/GuLiang-I/LangSU</string>
     <string name="home_click_to_learn_langsu">Научи как да изтеглите LangSU и да използвате модули.</string>
     <string name="home_support_title">Помогнете Ни</string>
     <string name="home_support_content">LangSU си е, и винаги ще е безплатен, и с отворен код. Обаче, можете да ни покажете че се интересувате като ни направите дарение.</string>

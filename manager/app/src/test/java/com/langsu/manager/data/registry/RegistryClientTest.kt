@@ -11,7 +11,7 @@ import java.io.IOException
 
 class RegistryClientTest {
 
-    private val base = "https://modules.langsu.dev/"
+    private val base = "https://modules.kernelsu.org/"
     private val indexUrl = base + "api/v1/index.json"
     private val listUrl = base + "api/v1/modules.json"
     private fun detailUrl(id: String) = base + "api/v1/modules/$id.json"

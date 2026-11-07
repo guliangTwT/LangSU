@@ -88,13 +88,13 @@
     <string name="safe_mode_module_disabled">处于安全模式下，禁止安装模块</string>
     <string name="reboot_to_apply">重启生效</string>
     <string name="module_magisk_conflict">因与 Magisk 有冲突，所有模块不可用！</string>
-    <string name="home_learn_langsu">了解 LangSU</string>
-    <string name="home_learn_langsu_url">https://langsu.org/zh_CN/guide/what-is-langsu.html</string>
-    <string name="home_click_to_learn_langsu">了解如何安装 LangSU 以及如何开发模块</string>
-    <string name="home_support_title">支持开发</string>
-    <string name="home_support_content">LangSU 将保持免费开源，向开发者捐赠以表示支持</string>
+    <string name="home_learn_langsu">关于本版本</string>
+    <string name="home_learn_langsu_url">https://github.com/GuLiang-I/LangSU</string>
+    <string name="home_click_to_learn_langsu">LangSU 是基于 KernelSU 修改的版本，安装与模块文档请参考上游项目。</string>
+    <string name="home_support_title">上游项目</string>
+    <string name="home_support_content">基于 KernelSU（GPL-2.0）修改，与作者无隶属关系，本项目没有捐赠渠道，请支持上游。</string>
     <string name="home_gki_warning">自 v3.0.0 起 GKI 工作模式将仅用于测试环境，我们不建议用于日常使用，也不再提供镜像文件</string>
-    <string name="about_source_code"><![CDATA[在 %1$s 查看源码<br/>加入我们的 %2$s 频道<br/>加入我们的 <b><a href="https://pd.qq.com/s/8lipl1brp">QQ</a></b> 频道]]></string>
+    <string name="about_source_code">源码：%1$s<br/>许可证：%2$s，基于 KernelSU 修改</string>
     <string name="profile_default">默认</string>
     <string name="profile_template">模板</string>
     <string name="profile_custom">自定义</string>

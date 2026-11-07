@@ -22,3 +22,7 @@ __pycache__
 *.aab
 *.jks
 *.keystore
+
+# Icon generator output (regenerate with scripts/icon/make_icons.ps1)
+/scripts/icon/preview.png
+/scripts/icon/.work

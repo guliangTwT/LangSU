@@ -42,7 +42,7 @@
     <string name="reboot_to_apply">Riavvia per applicare la modifica</string>
     <string name="module_magisk_conflict">I moduli sono disabilitati perché in conflitto con Magisk!</string>
     <string name="home_learn_langsu">Scopri LangSU</string>
-    <string name="home_learn_langsu_url">https://langsu.dev/guide/what-is-kernelsu.html</string>
+    <string name="home_learn_langsu_url">https://github.com/GuLiang-I/LangSU</string>
     <string name="home_click_to_learn_langsu">Scopri come installare LangSU e utilizzare i moduli</string>
     <string name="home_support_title">Supportaci</string>
     <string name="home_support_content">LangSU è, e sempre sarà, gratuito e open source. Puoi comunque mostrarci il tuo apprezzamento facendo una donazione.</string>

@@ -42,7 +42,7 @@
     <string name="reboot_to_apply">Перезавантажте, щоб застосувати</string>
     <string name="module_magisk_conflict">Модулі недоступні через конфлікт з Magisk!</string>
     <string name="home_learn_langsu">Дізнайтеся про LangSU</string>
-    <string name="home_learn_langsu_url">https://langsu.dev/guide/what-is-kernelsu.html</string>
+    <string name="home_learn_langsu_url">https://github.com/GuLiang-I/LangSU</string>
     <string name="home_click_to_learn_langsu">Дізнайтеся, як інсталювати LangSU і використовувати модулі.</string>
     <string name="home_support_title">Підтримати нас</string>
     <string name="home_support_content">LangSU є і завжди буде безкоштовним програмним забезпеченням з відкритим вихідним кодом. Однак ви можете показати нам, що вам небайдужа наша допомога, зробивши пожертву.</string>

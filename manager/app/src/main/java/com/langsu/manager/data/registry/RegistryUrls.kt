@@ -6,7 +6,7 @@ import java.net.URLDecoder
 object RegistryUrls {
 
     /** Site root of LangSU Modules. All API paths are resolved against it. */
-    const val DEFAULT_BASE_URL = "https://modules.langsu.dev/"
+    const val DEFAULT_BASE_URL = "https://modules.kernelsu.org/"
 
     const val INDEX_PATH = "api/v1/index.json"
 

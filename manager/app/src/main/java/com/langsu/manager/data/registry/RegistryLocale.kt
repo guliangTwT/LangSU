@@ -6,7 +6,7 @@ package com.langsu.manager.data.registry
  */
 object RegistryLocale {
 
-    /** UI locales of the public site (https://modules.langsu.dev/{locale}/modules/{id}/). */
+    /** UI locales of the public site (https://modules.kernelsu.org/{locale}/modules/{id}/). */
     const val SITE_LOCALE_EN = "en"
     const val SITE_LOCALE_ZH_CN = "zh-CN"
 

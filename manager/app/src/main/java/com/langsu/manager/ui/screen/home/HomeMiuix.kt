@@ -452,7 +452,8 @@ private fun SupportLinks(
                     tint = colorScheme.onBackground,
                 )
             },
-            onClick = { onOpenUrl("https://patreon.com/weishu") },
+            // Upstream project page, not a donation link: this fork has none.
+            onClick = { onOpenUrl("https://github.com/tiann/KernelSU") },
         )
         ArrowPreference(
             title = stringResource(R.string.home_learn_langsu),
