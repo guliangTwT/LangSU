@@ -16,7 +16,13 @@ add_library(langsu
         langsu.cc
         )
 
-target_include_directories(langsu PRIVATE .)
+# The uapi headers live once, at <repo>/uapi. Upstream linked them into this
+# directory with a symlink, which git cannot materialise on Windows without
+# Developer Mode (it lands as a plain file holding the target path, and the
+# build then fails). Adding the repo root as an include directory instead keeps
+# a single source of truth without relying on symlink support.
+get_filename_component(LANGSU_REPO_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../../.." ABSOLUTE)
+target_include_directories(langsu PRIVATE . "${LANGSU_REPO_ROOT}")
 
 find_library(log-lib log)
 
