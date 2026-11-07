@@ -19,7 +19,7 @@ fun AboutScreen() {
     // channels and sending users there would be misleading.
     val htmlString = stringResource(
         id = R.string.about_source_code,
-        "<b><a href=\"https://github.com/GuLiang-I/LangSU\">GitHub</a></b>",
+        "<b><a href=\"https://codeberg.org/GuLiang/LangSU\">Codeberg</a></b>",
         "GPL-2.0"
     )
     val state = AboutUiState(

@@ -57,8 +57,8 @@ internal suspend fun isDownloadAvailable(uri: Uri): Boolean = withContext(Dispat
  */
 private const val UPDATE_MANIFEST_URL = "https://guliang.me/langsu/updates/latest.json"
 
-/** GitHub is only a fallback: the manifest is the authoritative source. */
-private const val GITHUB_LATEST_URL = "https://api.github.com/repos/GuLiang-I/LangSU/releases/latest"
+/** Codeberg is only a fallback: the manifest is the authoritative source. */
+private const val CODEBERG_LATEST_URL = "https://codeberg.org/api/v1/repos/GuLiang/LangSU/releases/latest"
 
 private fun fetchText(url: String): String? = runCatching {
     langsuApp.okhttpClient.newCall(Request.Builder().url(url).build()).execute().use { response ->
@@ -68,7 +68,7 @@ private fun fetchText(url: String): String? = runCatching {
 
 /**
  * Reads the self-hosted manifest. Returns null when it is unreachable or malformed so the
- * caller can fall back to GitHub.
+ * caller can fall back to the repository releases on Codeberg.
  */
 private fun checkSelfHostedManifest(): LatestVersionInfo? {
     // The timestamp defeats any intermediate cache; the page and client both use it.
@@ -99,9 +99,9 @@ private fun checkSelfHostedManifest(): LatestVersionInfo? {
     }.getOrNull()
 }
 
-/** Fallback source: the repository's own GitHub releases. */
-private fun checkGitHubReleases(): LatestVersionInfo? {
-    val body = fetchText(GITHUB_LATEST_URL) ?: return null
+/** Fallback source: the repository's own releases on Codeberg. */
+private fun checkRepositoryReleases(): LatestVersionInfo? {
+    val body = fetchText(CODEBERG_LATEST_URL) ?: return null
     return runCatching {
         val json = org.json.JSONObject(body)
         val versionName = json.optString("tag_name").trim().removePrefix("v")
@@ -124,9 +124,10 @@ private fun checkGitHubReleases(): LatestVersionInfo? {
 
 fun checkNewVersion(): LatestVersionInfo {
     if (!isNetworkAvailable(langsuApp)) return LatestVersionInfo()
-    // Manifest first (own host, no rate limits, works where GitHub is slow or blocked);
-    // GitHub stays as a fallback so an outage of the host does not kill update checks.
+    // Manifest first (own host, no rate limits, works where the repository host is slow or
+    // blocked); the repository releases stay as a fallback so an outage of the host does not
+    // kill update checks.
     checkSelfHostedManifest()?.let { return it }
-    checkGitHubReleases()?.let { return it }
+    checkRepositoryReleases()?.let { return it }
     return LatestVersionInfo()
 }

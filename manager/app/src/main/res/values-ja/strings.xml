@@ -42,7 +42,7 @@
     <string name="reboot_to_apply">再起動すると有効化されます</string>
     <string name="module_magisk_conflict">モジュールが Magisk との競合により利用できません!</string>
     <string name="home_learn_langsu">LangSU について</string>
-    <string name="home_learn_langsu_url">https://github.com/GuLiang-I/LangSU</string>
+    <string name="home_learn_langsu_url">https://codeberg.org/GuLiang/LangSU</string>
     <string name="home_click_to_learn_langsu">LangSU のインストール方法やモジュールの使い方はこちら</string>
     <string name="home_support_title">支援する</string>
     <string name="home_support_content">LangSU はこれからもずっと無料でオープンソースです。寄付をして頂くことで、開発を支援していただけます。</string>

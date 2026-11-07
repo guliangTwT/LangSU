@@ -6,14 +6,14 @@ on:
       - 'main'
       - 'dev'
     paths:
-      - '.github/workflows/shellcheck.yml'
+      - '.forgejo/workflows/shellcheck.yml'
       - '**/*.sh'
   pull_request:
     branches:
       - 'main'
       - 'dev'
     paths:
-      - '.github/workflows/shellcheck.yml'
+      - '.forgejo/workflows/shellcheck.yml'
       - '**/*.sh'
 
 jobs:
@@ -26,4 +26,4 @@ jobs:
         uses: ludeeus/action-shellcheck@2.0.0
         with:
           ignore_names: gradlew
-          ignore_paths: ./userspace/langsud/src/installer.sh ./.github/scripts/setup-rust-build.sh
+          ignore_paths: ./userspace/langsud/src/installer.sh ./.forgejo/scripts/setup-rust-build.sh

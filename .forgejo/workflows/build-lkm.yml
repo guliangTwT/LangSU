@@ -31,7 +31,7 @@ jobs:
           - android15-6.6
           - android16-6.12
           - android17-6.18
-    uses: ./.github/workflows/ddk-lkm.yml
+    uses: ./.forgejo/workflows/ddk-lkm.yml
     with:
       kmi: ${{ matrix.kmi }}
       package_name: ${{ inputs.package_name || '' }}

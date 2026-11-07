@@ -42,7 +42,7 @@
     <string name="reboot_to_apply">إعادة التشغيل لتطبيق التغييرات</string>
     <string name="module_magisk_conflict">الوحدات غير متاحة بسبب تعارضها مع Magisk!</string>
     <string name="home_learn_langsu">تعلم LangSU</string>
-    <string name="home_learn_langsu_url">https://github.com/GuLiang-I/LangSU</string>
+    <string name="home_learn_langsu_url">https://codeberg.org/GuLiang/LangSU</string>
     <string name="home_click_to_learn_langsu">تعرف على كيفية تثبيت LangSU واستخدام الإضافات</string>
     <string name="home_support_title">إدعمنا</string>
     <string name="home_support_content">LangSU سيظل دائماً مجانياً ومفتوح المصدر. مع ذلك، يمكنك متى ما استطعت أن تظهر لنا أنك تهتم بالتبرع.</string>

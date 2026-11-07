@@ -46,7 +46,7 @@ jobs:
         EXPECTED_SIZE: ${{ inputs.expected_size }}
         EXPECTED_HASH: ${{ inputs.expected_hash }}
       run: |
-        git config --global --add safe.directory /__w/LangSU/LangSU
+        git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
         cd kernel
 
@@ -70,7 +70,7 @@ jobs:
         echo "=== Build completed ==="
 
         # Create output directory in GitHub workspace
-        OUT_DIR=/github/workspace/out/aarch64
+        OUT_DIR="$GITHUB_WORKSPACE"/out/aarch64
         mkdir -p $OUT_DIR
 
         # Copy with KMI-specific naming
@@ -87,7 +87,7 @@ jobs:
       uses: actions/upload-artifact@v7
       with:
         name: aarch64-${{ inputs.kmi }}-lkm
-        path: /github/workspace/out/aarch64/${{ inputs.kmi }}_langsu.ko
+        path: ${{ github.workspace }}/out/aarch64/${{ inputs.kmi }}_langsu.ko
 
     - name: Build langsu.ko for x64
       env:
@@ -154,7 +154,7 @@ jobs:
         echo "=== Build completed ==="
 
         # Create output directory in GitHub workspace
-        OUT_DIR=/github/workspace/out/x86_64
+        OUT_DIR="$GITHUB_WORKSPACE"/out/x86_64
         mkdir -p $OUT_DIR
 
         # Copy with KMI-specific naming
@@ -171,4 +171,4 @@ jobs:
       uses: actions/upload-artifact@v7
       with:
         name: x86_64-${{ inputs.kmi }}-lkm
-        path: /github/workspace/out/x86_64/${{ inputs.kmi }}_langsu.ko
+        path: ${{ github.workspace }}/out/x86_64/${{ inputs.kmi }}_langsu.ko

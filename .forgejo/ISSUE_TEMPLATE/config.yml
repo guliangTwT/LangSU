@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 下载与更新
+    url: https://guliang.me/langsu/updates/
+    about: LangSU 管理器与内核模块的下载页，也是更新检查的来源。

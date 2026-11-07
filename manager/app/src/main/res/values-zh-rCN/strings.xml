@@ -89,7 +89,7 @@
     <string name="reboot_to_apply">重启生效</string>
     <string name="module_magisk_conflict">因与 Magisk 有冲突，所有模块不可用！</string>
     <string name="home_learn_langsu">关于本版本</string>
-    <string name="home_learn_langsu_url">https://github.com/GuLiang-I/LangSU</string>
+    <string name="home_learn_langsu_url">https://codeberg.org/GuLiang/LangSU</string>
     <string name="home_click_to_learn_langsu">LangSU 是基于 KernelSU 修改的版本，安装与模块文档请参考上游项目。</string>
     <string name="home_support_title">上游项目</string>
     <string name="home_support_content">基于 KernelSU（GPL-2.0）修改，与作者无隶属关系，本项目没有捐赠渠道，请支持上游。</string>

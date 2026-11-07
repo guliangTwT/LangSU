@@ -14,7 +14,7 @@ export default defineConfig( {
         }],
     ],
     sitemap: {
-        hostname: 'https://github.com/GuLiang-I/LangSU'
+        hostname: 'https://codeberg.org/GuLiang/LangSU'
     },
     buildEnd: async (config: SiteConfig) => {
         const templateDir = resolve(config.outDir, 'templates');

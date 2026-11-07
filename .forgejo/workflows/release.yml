@@ -1,4 +1,5 @@
 name: Release
+
 on:
   push:
     tags:
@@ -7,11 +8,13 @@ on:
 
 jobs:
   build-manager:
-    uses: ./.github/workflows/build-manager.yml
+    uses: ./.forgejo/workflows/build-manager.yml
     secrets: inherit
+
   release:
     needs:
       - build-manager
+    if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
@@ -61,11 +64,35 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R
 
-      - name: release
-        uses: softprops/action-gh-release@v3
-        with:
-          files: |
-            manager/*.apk
-            lkm/lkm-*_langsu.ko
-            langsud/langsud-*
-            langsuinit/*
+      # Forgejo has no softprops/action-gh-release, so the release is created through the
+      # REST API. Without CODEBERG_TOKEN the job stops after the build.
+      - name: Publish release to Codeberg
+        env:
+          TOKEN: ${{ secrets.CODEBERG_TOKEN }}
+          REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "CODEBERG_TOKEN is not configured; release upload skipped."
+            exit 0
+          fi
+          API="https://codeberg.org/api/v1/repos/$REPO"
+          NOTES="LangSU $TAG 的构建产物：管理器 APK、8 个 KMI 的内核模块、langsud 与 langsuinit。"
+          PAYLOAD=$(jq -n --arg tag "$TAG" --arg name "LangSU $TAG" --arg body "$NOTES" \
+            '{tag_name:$tag, name:$name, body:$body, draft:false, prerelease:false}')
+          RELEASE_ID=$(curl -sS -X POST \
+            -H "Authorization: token $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD" "$API/releases" | jq -r '.id')
+          if [ -z "$RELEASE_ID" ] || [ "$RELEASE_ID" = "null" ]; then
+            echo "Failed to create the release"
+            exit 1
+          fi
+          for FILE in manager/*.apk lkm/lkm-*_langsu.ko langsud/langsud-* langsuinit/*; do
+            [ -f "$FILE" ] || continue
+            curl -sS -f -X POST \
+              -H "Authorization: token $TOKEN" \
+              -F "attachment=@$FILE" \
+              "$API/releases/$RELEASE_ID/assets?name=$(basename "$FILE")"
+            echo "uploaded $(basename "$FILE")"
+          done

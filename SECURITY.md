@@ -5,7 +5,7 @@ KernelSU authors or to their security advisory channel - they do not maintain th
 
 To report an issue in LangSU, open a private security advisory on this repository:
 
-<https://github.com/GuLiang-I/LangSU/security/advisories/new>
+<https://codeberg.org/GuLiang/LangSU/security/advisories/new>
 
 or open a regular issue if the problem is not sensitive.
 

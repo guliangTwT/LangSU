@@ -1,6 +1,6 @@
 {
     "id":"system",
-    "author":"github.com/GuLiang-I/LangSU",
+    "author":"codeberg.org/GuLiang/LangSU",
     "name":"System",
     "description":"The permission level at which the Android system runs without any capability.",
     "uid":1000,

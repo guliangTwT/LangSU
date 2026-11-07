@@ -1,9 +1,9 @@
 {
   "name": "LangSU_website",
   "version": "1.0.0",
-  "description": "LangSU official website: https://github.com/GuLiang-I/LangSU",
+  "description": "LangSU official website: https://codeberg.org/GuLiang/LangSU",
   "main": "index.js",
-  "repository": "https://github.com/GuLiang-I/LangSU",
+  "repository": "https://codeberg.org/GuLiang/LangSU",
   "author": "LangSU",
   "license": "MIT",
   "devDependencies": {

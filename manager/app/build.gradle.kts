@@ -1,6 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.google.protobuf.gradle.id
+import java.io.File
 import java.security.MessageDigest
 import java.util.Properties
 
@@ -66,13 +67,25 @@ run {
         // Gradle Java plugin extension inside a build script, so it is imported above.
         val props = Properties()
         propsFile.inputStream().use { props.load(it) }
-        listOf("KEYSTORE_FILE", "KEYSTORE_PASSWORD", "KEY_ALIAS", "KEY_PASSWORD").forEach { key ->
-            val value = props.getProperty(key)
+        // `Properties.load` decodes ISO-8859-1, so a non-ASCII absolute path would be mangled
+        // and the build silently fell back to the debug key. Keep KEYSTORE_FILE relative to
+        // this properties file and resolve it here instead.
+        val keystore = props.getProperty("KEYSTORE_FILE")?.trim()?.takeIf { it.isNotEmpty() }
+        val keystoreFile = keystore?.let { raw ->
+            val file = File(raw)
+            (if (file.isAbsolute) file else File(propsFile.parentFile, raw)).canonicalFile
+        }
+        mapOf(
+            "KEYSTORE_FILE" to keystoreFile?.path,
+            "KEYSTORE_PASSWORD" to props.getProperty("KEYSTORE_PASSWORD"),
+            "KEY_ALIAS" to props.getProperty("KEY_ALIAS"),
+            "KEY_PASSWORD" to props.getProperty("KEY_PASSWORD"),
+        ).forEach { (key, value) ->
             if (!value.isNullOrBlank()) {
                 project.extensions.extraProperties.set(key, value)
             }
         }
-        logger.lifecycle("LangSU: signing with ${props.getProperty("KEYSTORE_FILE")}")
+        logger.lifecycle("LangSU: signing with ${keystoreFile?.path}")
     }
 }
 

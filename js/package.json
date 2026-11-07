@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GuLiang-I/LangSU.git"
+    "url": "git+https://codeberg.org/GuLiang/LangSU.git"
   },
   "keywords": [
     "su",
@@ -20,7 +20,7 @@
   "author": "LangSU",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/GuLiang-I/LangSU/issues"
+    "url": "https://codeberg.org/GuLiang/LangSU/issues"
   },
-  "homepage": "https://github.com/GuLiang-I/LangSU#readme"
+  "homepage": "https://codeberg.org/GuLiang/LangSU#readme"
 }

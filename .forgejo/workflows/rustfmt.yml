@@ -6,14 +6,14 @@ on:
       - 'main'
       - 'dev'
     paths:
-      - '.github/workflows/rustfmt.yml'
+      - '.forgejo/workflows/rustfmt.yml'
       - 'userspace/**'
   pull_request:
     branches:
       - 'main'
       - 'dev'
     paths:
-      - '.github/workflows/rustfmt.yml'
+      - '.forgejo/workflows/rustfmt.yml'
       - 'userspace/**'
 
 permissions:
