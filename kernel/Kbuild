@@ -1,0 +1,158 @@
+langsu-objs := core/init.o
+
+langsu-objs += feature/kernel_umount.o
+langsu-objs += feature/module_blacklist.o
+langsu-objs += feature/sulog.o
+langsu-objs += feature/sucompat.o
+
+langsu-objs += hook/lsm_hook.o
+langsu-objs += hook/setuid_hook.o
+langsu-objs += hook/syscall_event_bridge.o
+langsu-objs += hook/syscall_hook_manager.o
+langsu-objs += hook/tp_marker.o
+ifeq ($(CONFIG_ARM64),y)
+langsu-objs += hook/arm64/patch_memory.o
+langsu-objs += hook/arm64/syscall_hook.o
+else ifeq ($(CONFIG_X86_64),y)
+langsu-objs += hook/x86_64/patch_memory.o
+langsu-objs += hook/x86_64/syscall_hook.o
+else ifeq ($(CONFIG_RISCV),y)
+langsu-objs += hook/riscv64/patch_memory.o
+langsu-objs += hook/riscv64/syscall_hook.o
+endif
+
+langsu-objs += infra/file_wrapper.o
+langsu-objs += infra/event_queue.o
+langsu-objs += infra/seccomp_cache.o
+langsu-objs += infra/su_mount_ns.o
+langsu-objs += infra/symbol_resolver.o
+
+ifneq ($(CONFIG_LANGSU_DISABLE_MANAGER),y)
+langsu-objs += manager/apk_sign.o
+langsu-objs += manager/pkg_observer.o
+langsu-objs += manager/throne_tracker.o
+endif
+
+langsu-objs += policy/allowlist.o
+langsu-objs += policy/app_profile.o
+langsu-objs += policy/feature.o
+
+langsu-objs += runtime/boot_event.o
+langsu-objs += runtime/langsud_integration.o
+
+langsu-objs += selinux/selinux.o
+langsu-objs += selinux/rules.o
+langsu-objs += selinux/sepolicy.o
+
+langsu-objs += sulog/event.o
+langsu-objs += sulog/fd.o
+
+langsu-objs += supercall/dispatch.o
+langsu-objs += supercall/perm.o
+langsu-objs += supercall/supercall.o
+
+langsu-objs += feature/adb_root.o
+
+langsu-objs += feature/selinux_hide.o
+langsu-objs += feature/shell_su_adb_only.o
+
+ifdef KBUILD_EXTMOD
+ifeq ($(CONFIG_LANGSU_DISABLE_MANAGER),y)
+ccflags-y += -DCONFIG_LANGSU_DISABLE_MANAGER=1
+endif
+ifeq ($(CONFIG_LANGSU_DISABLE_POLICY),y)
+ccflags-y += -DCONFIG_LANGSU_DISABLE_POLICY=1
+endif
+ifeq ($(CONFIG_LANGSU_DEBUG),y)
+ccflags-y += -DCONFIG_LANGSU_DEBUG=1
+endif
+ifeq ($(CONFIG_LANGSU_X86_PATCH_SYSCALL_DISPATCHER),y)
+ccflags-y += -DCONFIG_LANGSU_X86_PATCH_SYSCALL_DISPATCHER=1
+endif
+endif
+
+ccflags-y += -I$(srctree)/security/selinux -I$(srctree)/security/selinux/include
+ccflags-y += -I$(objtree)/security/selinux -include $(srctree)/include/uapi/asm-generic/errno.h
+
+ifneq ($(KBUILD_EXTMOD),)
+# 6.18 exports the external module source as srcroot when M/MO are used.
+ifneq ($(srcroot),)
+LANGSU_KERNEL_DIR := $(srcroot)
+endif
+endif
+ifndef LANGSU_KERNEL_DIR
+ifeq ($(filter /%,$(src)),)
+LANGSU_KERNEL_DIR := $(srctree)/$(src)
+else
+LANGSU_KERNEL_DIR := $(src)
+endif
+endif
+
+ccflags-y += -I$(LANGSU_KERNEL_DIR) -I$(LANGSU_KERNEL_DIR)/include
+
+obj-$(CONFIG_LANGSU) += langsu.o
+
+MDIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+
+# Workaround bazel
+# https://github.com/tiann/KernelSU/pull/316#issuecomment-1479043219
+GIT := $(shell PATH="$$PATH":/usr/bin:/usr/local/bin which git)
+ifneq ($(GIT),)
+# Check if this is a git repository
+# Try to detect Git repo intelligently
+GIT_ROOT := $(shell cd $(MDIR) && $(GIT) rev-parse --show-toplevel 2>/dev/null)
+ifneq ($(GIT_ROOT),)
+KERNEL_GIT_ROOT := $(shell cd $(srctree) && $(GIT) rev-parse --show-toplevel 2>/dev/null)
+ifneq ($(GIT_ROOT),$(KERNEL_GIT_ROOT))
+# Only set version if it's a different repo from kernel
+$(shell cd $(GIT_ROOT) && [ -f .git/shallow ] && $(GIT) fetch --unshallow 2>/dev/null || true)
+LANGSU_GIT_VERSION := $(shell cd $(GIT_ROOT) && $(GIT) rev-list --count HEAD 2>/dev/null)
+LANGSU_GIT_VERSION_VALID := 1
+$(info -- LangSU: Git repo detected at $(GIT_ROOT))
+endif
+endif
+else
+$(warning -- LangSU: Git not detected, make sure git is installed in your PATH!)
+endif
+
+
+# Calculate version if git version is available
+ifdef LANGSU_GIT_VERSION_VALID
+# langsu_version: major * 10000 + git version + 200 for historical reasons
+$(eval LANGSU_VERSION=$(shell expr 30000 + $(LANGSU_GIT_VERSION)))
+$(info -- LangSU version: $(LANGSU_VERSION))
+ccflags-y += -DLANGSU_VERSION=$(LANGSU_VERSION)
+else
+# If there is no .git directory, use default version
+$(warning "LANGSU_GIT_VERSION not defined! It is better to make LangSU a git repository!")
+ccflags-y += -DLANGSU_VERSION=16
+endif
+
+LANGSU_NEW_DCACHE_FLUSH := $(shell grep -q __flush_dcache_area $(srctree)/arch/arm64/include/asm/cacheflush.h ; echo $$?)
+$(info -- LANGSU_NEW_DCACHE_FLUSH: $(LANGSU_NEW_DCACHE_FLUSH))
+
+LANGSU_IS_PR_BUILD ?= 0
+ifeq ($(LANGSU_IS_PR_BUILD),0)
+LANGSU_PACKAGE_NAME ?= com.langsu.manager
+else
+LANGSU_PACKAGE_NAME ?= com.langsu.manager.pr
+endif
+LANGSU_EXPECTED_SIZE ?= 0x033b
+LANGSU_EXPECTED_HASH ?= c371061b19d8c7d7d6133c6a9bafe198fa944e50c1b31c9d8daa8d7f1fc2d2d6
+
+$(info -- LangSU Manager package name: $(LANGSU_PACKAGE_NAME))
+$(info -- LangSU Manager signature size: $(LANGSU_EXPECTED_SIZE))
+$(info -- LangSU Manager signature hash: $(LANGSU_EXPECTED_HASH))
+$(info -- LangSU is PR Build: $(LANGSU_IS_PR_BUILD))
+
+ccflags-y += -DLANGSU_PACKAGE_NAME=\"$(LANGSU_PACKAGE_NAME)\"
+ccflags-y += -DEXPECTED_SIZE=$(LANGSU_EXPECTED_SIZE)
+ccflags-y += -DEXPECTED_HASH=\"$(LANGSU_EXPECTED_HASH)\"
+ccflags-y += -DLANGSU_IS_PR_BUILD=$(LANGSU_IS_PR_BUILD)
+
+ccflags-y += -DLANGSU_NEW_DCACHE_FLUSH=$(LANGSU_NEW_DCACHE_FLUSH)
+
+ccflags-y += -Wno-strict-prototypes -Wno-int-conversion -Wno-gcc-compat -Wno-missing-prototypes
+ccflags-y += -Wno-declaration-after-statement -Wno-unused-function
+
+# Keep a new line here!! Because someone may append config

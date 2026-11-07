@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#FFFFD6E3</color>
+    <color name="ic_launcher_foreground">#FF8C3B5E</color>
+    <color name="ic_splash_background">#FFFFE4EE</color>
+    <color name="splash_background_dark">#FF2B171C</color>
+    <color name="sakura_pink">#FFFF9CA8</color>
+</resources>

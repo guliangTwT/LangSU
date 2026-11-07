@@ -1,0 +1,24 @@
+.idea
+.vscode
+CLAUDE.md
+AGENTS.md
+.DS_Store
+/target
+.cargo/config.toml
+__pycache__
+/dist
+/repack-config.json
+/userspace/langsud/.lkm_image_bootstrap.o
+
+# Android / Gradle build output
+/build
+/manager/build
+/manager/app/build
+/manager/.gradle
+/manager/app/.cxx
+/manager/local.properties
+/manager/sign.properties
+*.apk
+*.aab
+*.jks
+*.keystore

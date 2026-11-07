@@ -1,0 +1,71 @@
+name: Release
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  build-manager:
+    uses: ./.github/workflows/build-manager.yml
+    secrets: inherit
+  release:
+    needs:
+      - build-manager
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v8
+
+      - name: Rename langsud
+        run: |
+          mkdir -p langsud
+          for dir in ./langsud-*; do
+            if [ -d "$dir" ]; then
+                echo "----- Rename $dir -----"
+                langsud_platform_name=$(basename "$dir")
+                if [ -f "$dir/langsud" ]; then
+                  mv "$dir/langsud" "langsud/$langsud_platform_name"
+                elif [ -f "$dir/langsud.exe" ]; then
+                  mv "$dir/langsud.exe" "langsud/$langsud_platform_name.exe"
+                fi
+            fi
+          done
+
+      - name: Rename langsuinit
+        run: |
+          mkdir -p langsuinit
+          for dir in ./langsuinit-*; do
+            if [ -d "$dir" ]; then
+                echo "----- Rename $dir -----"
+                langsuinit_platform_name=$(basename "$dir")
+                if [ -f "$dir/langsuinit" ]; then
+                  mv "$dir/langsuinit" "langsuinit/$langsuinit_platform_name"
+                fi
+            fi
+          done
+
+      - name: Rename lkm
+        run: |
+          mkdir -p lkm
+          for dir in ./*-android*-lkm; do
+            if [ -d "$dir" ]; then
+                echo "----- Rename $dir -----"
+                lkm_platform_name=$(basename "$dir")
+                lkm_platform_name="lkm-${lkm_platform_name%-lkm}_langsu.ko"
+                KO="$(ls $dir/*_langsu.ko)"
+                mv "$KO" "lkm/$lkm_platform_name"
+            fi
+          done
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            manager/*.apk
+            lkm/lkm-*_langsu.ko
+            langsud/langsud-*
+            langsuinit/*
