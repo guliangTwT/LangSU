@@ -1,8 +1,10 @@
 package com.langsu.manager.ui.screen.home
 
 import androidx.compose.runtime.Immutable
+import com.langsu.manager.BuildConfig
 import com.langsu.manager.KernelVersion
 import com.langsu.manager.ui.util.module.LatestVersionInfo
+import com.langsu.manager.ui.util.module.compareVersionNames
 
 @Immutable
 data class HomeUiState(
@@ -56,7 +58,8 @@ data class HomeUiState(
         get() = isManager && !isManagerPrBuild && isKernelPrBuild
 
     val hasUpdate: Boolean
-        get() = latestVersionInfo.versionCode > currentManagerVersionCode
+        get() = latestVersionInfo.downloadUrl.isNotBlank() &&
+                compareVersionNames(latestVersionInfo.versionName, BuildConfig.VERSION_NAME) > 0
 }
 
 @Immutable

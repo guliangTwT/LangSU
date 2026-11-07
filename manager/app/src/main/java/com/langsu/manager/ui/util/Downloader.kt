@@ -51,45 +51,82 @@ internal suspend fun isDownloadAvailable(uri: Uri): Boolean = withContext(Dispat
     }.getOrDefault(false)
 }
 
+/**
+ * Base URL of the self-hosted update channel. Releases are published as a static
+ * `latest.json` plus the APK (see the selfhost-release notes in REFACTOR_NOTES.md).
+ */
+private const val UPDATE_MANIFEST_URL = "https://guliang.me/langsu/updates/latest.json"
+
+/** GitHub is only a fallback: the manifest is the authoritative source. */
+private const val GITHUB_LATEST_URL = "https://api.github.com/repos/GuLiang-I/LangSU/releases/latest"
+
+private fun fetchText(url: String): String? = runCatching {
+    langsuApp.okhttpClient.newCall(Request.Builder().url(url).build()).execute().use { response ->
+        if (response.isSuccessful) response.body.string() else null
+    }
+}.getOrNull()
+
+/**
+ * Reads the self-hosted manifest. Returns null when it is unreachable or malformed so the
+ * caller can fall back to GitHub.
+ */
+private fun checkSelfHostedManifest(): LatestVersionInfo? {
+    // The timestamp defeats any intermediate cache; the page and client both use it.
+    val body = fetchText("$UPDATE_MANIFEST_URL?t=${System.currentTimeMillis()}") ?: return null
+    return runCatching {
+        val json = org.json.JSONObject(body)
+        val versionName = json.optString("version").trim().removePrefix("v")
+        if (versionName.isEmpty()) return null
+
+        val assets = json.optJSONArray("assets") ?: return null
+        for (i in 0 until assets.length()) {
+            val asset = assets.getJSONObject(i)
+            val name = asset.optString("name")
+            if (!name.endsWith(".apk", ignoreCase = true)) continue
+
+            val urls = asset.optJSONArray("urls")
+            val primary = urls?.optString(0)?.takeIf { it.isNotBlank() } ?: continue
+
+            return LatestVersionInfo(
+                versionCode = 0,
+                versionName = versionName,
+                downloadUrl = primary,
+                changelog = json.optString("notes"),
+                sha256 = asset.optString("sha256").lowercase(),
+            )
+        }
+        null
+    }.getOrNull()
+}
+
+/** Fallback source: the repository's own GitHub releases. */
+private fun checkGitHubReleases(): LatestVersionInfo? {
+    val body = fetchText(GITHUB_LATEST_URL) ?: return null
+    return runCatching {
+        val json = org.json.JSONObject(body)
+        val versionName = json.optString("tag_name").trim().removePrefix("v")
+        if (versionName.isEmpty()) return null
+
+        val assets = json.optJSONArray("assets") ?: return null
+        for (i in 0 until assets.length()) {
+            val asset = assets.getJSONObject(i)
+            if (!asset.optString("name").endsWith(".apk", ignoreCase = true)) continue
+            return LatestVersionInfo(
+                versionCode = 0,
+                versionName = versionName,
+                downloadUrl = asset.optString("browser_download_url"),
+                changelog = json.optString("body"),
+            )
+        }
+        null
+    }.getOrNull()
+}
+
 fun checkNewVersion(): LatestVersionInfo {
     if (!isNetworkAvailable(langsuApp)) return LatestVersionInfo()
-    // Must point at this fork. The upstream endpoint would advertise KernelSU builds,
-    // and "update" would then hand the user a different app.
-    val url = "https://api.github.com/repos/GuLiang-I/LangSU/releases/latest"
-    // default null value if failed
-    val defaultValue = LatestVersionInfo()
-    runCatching {
-        langsuApp.okhttpClient.newCall(Request.Builder().url(url).build()).execute()
-            .use { response ->
-                if (!response.isSuccessful) {
-                    return defaultValue
-                }
-                val body = response.body.string()
-                val json = org.json.JSONObject(body)
-                val changelog = json.optString("body")
-
-                val assets = json.getJSONArray("assets")
-                for (i in 0 until assets.length()) {
-                    val asset = assets.getJSONObject(i)
-                    val name = asset.getString("name")
-                    if (!name.endsWith(".apk")) {
-                        continue
-                    }
-
-                    val regex = Regex("v(.+?)_(\\d+)-")
-                    val matchResult = regex.find(name) ?: continue
-                    matchResult.groupValues[1]
-                    val versionCode = matchResult.groupValues[2].toInt()
-                    val downloadUrl = asset.getString("browser_download_url")
-
-                    return LatestVersionInfo(
-                        versionCode,
-                        downloadUrl,
-                        changelog
-                    )
-                }
-
-            }
-    }
-    return defaultValue
+    // Manifest first (own host, no rate limits, works where GitHub is slow or blocked);
+    // GitHub stays as a fallback so an outage of the host does not kill update checks.
+    checkSelfHostedManifest()?.let { return it }
+    checkGitHubReleases()?.let { return it }
+    return LatestVersionInfo()
 }
