@@ -89,7 +89,7 @@
     <string name="reboot_to_apply">重启生效</string>
     <string name="module_magisk_conflict">因与 Magisk 有冲突，所有模块不可用！</string>
     <string name="home_learn_langsu">了解 LangSU</string>
-    <string name="home_learn_langsu_url">https://langsu.dev/zh_CN/guide/what-is-kernelsu.html</string>
+    <string name="home_learn_langsu_url">https://langsu.org/zh_CN/guide/what-is-langsu.html</string>
     <string name="home_click_to_learn_langsu">了解如何安装 LangSU 以及如何开发模块</string>
     <string name="home_support_title">支持开发</string>
     <string name="home_support_content">LangSU 将保持免费开源，向开发者捐赠以表示支持</string>
@@ -169,6 +169,9 @@
     <string name="enable_web_debugging_summary">可用于调试 WebUI，请仅在需要时启用</string>
     <string name="settings_hide_launcher_icon">隐藏桌面图标</string>
     <string name="settings_hide_launcher_icon_summary">从桌面和应用列表中移除 LangSU。需要再次打开时，在拨号盘输入 *#*#5264#*#*。</string>
+    <string name="secret_entry_channel_name">暗码入口</string>
+    <string name="secret_entry_title">LangSU 已准备就绪</string>
+    <string name="secret_entry_text">点击打开 LangSU，桌面图标已恢复。</string>
     <string name="direct_install">直接安装（推荐）</string>
     <string name="select_file">选择文件并修补</string>
     <string name="download_file">下载文件并修补</string>

@@ -1,6 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.google.protobuf.gradle.id
+import java.security.MessageDigest
 
 plugins {
     alias(libs.plugins.agp.app)
@@ -35,7 +36,9 @@ val defaultManagerName = if (isPrBuild) "LangSU PR" else "LangSU"
 // will not be recognized (see kernel/Kbuild).
 val randomPackage = project.findProperty("LANGSU_RANDOM_PACKAGE")?.toString()?.toBoolean() ?: false
 fun randomPackageName(seed: String): String {
-    val digest = java.security.MessageDigest.getInstance("SHA-256")
+    // Note: `java` alone resolves to the Gradle Java plugin extension inside a
+    // build script, so MessageDigest is imported at the top of this file.
+    val digest = MessageDigest.getInstance("SHA-256")
         .digest(seed.toByteArray(Charsets.UTF_8))
     val hex = digest.joinToString("") { "%02x".format(it) }
     // Keep every segment a valid Java identifier (must start with a letter).

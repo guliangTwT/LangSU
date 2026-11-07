@@ -22,8 +22,10 @@ import java.security.SecureRandom
 private const val SETTINGS_PREFS = "settings"
 private const val KEY_USE_SOFT_REBOOT = "soft_reboot"
 // Activity-alias components live in the applicationId package, which may differ from
-// the code namespace on stealth builds, so the name is resolved at runtime.
-private const val LAUNCHER_ALIAS_SUFFIX = ".ui.LauncherActivity"
+// the code namespace on stealth builds, so this is the fully qualified name declared in
+// AndroidManifest.xml. It must match the manifest exactly: a relative name would be
+// expanded against `namespace` and no longer equal this ComponentName.
+private const val LAUNCHER_ALIAS_CLASS = "com.langsu.manager.ui.LauncherActivity"
 
 /** Prefer soft reboot: always in jailbreak mode, or when the setting is enabled. */
 fun isSoftRebootPreferred(): Boolean =
@@ -178,7 +180,7 @@ class SettingsRepositoryImpl : SettingsRepository {
         set(value) {
             runCatching {
                 langsuApp.packageManager.setComponentEnabledSetting(
-                    ComponentName(langsuApp, langsuApp.packageName + LAUNCHER_ALIAS_SUFFIX),
+                    ComponentName(langsuApp, LAUNCHER_ALIAS_CLASS),
                     if (value) PackageManager.COMPONENT_ENABLED_STATE_DISABLED
                     else PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP

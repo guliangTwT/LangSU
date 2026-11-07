@@ -184,6 +184,9 @@
     <string name="enable_web_debugging_summary">Can be used to debug WebUI. Please enable only when needed.</string>
     <string name="settings_hide_launcher_icon">Hide launcher icon</string>
     <string name="settings_hide_launcher_icon_summary">Remove LangSU from the home screen and app list. To open it again, dial *#*#5264#*#* in the phone app.</string>
+    <string name="secret_entry_channel_name">Secret entry</string>
+    <string name="secret_entry_title">LangSU is ready to open</string>
+    <string name="secret_entry_text">Tap to open LangSU. The launcher icon has been restored.</string>
     <string name="direct_install">Direct install (Recommended)</string>
     <string name="select_file">Select a file and patch</string>
     <string name="download_file">Download a file and patch</string>

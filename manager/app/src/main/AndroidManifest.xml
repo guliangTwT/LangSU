@@ -59,9 +59,13 @@
             </intent-filter>
         </activity>
 
-        <!-- Launcher entry. It can be disabled at runtime to hide LangSU from the app list. -->
+        <!-- Launcher entry. It can be disabled at runtime to hide LangSU from the app list.
+             The component name must stay fully qualified: the manifest merger would
+             otherwise expand a relative name against `namespace`, which stops matching
+             the ComponentName this app toggles when applicationId is customised.
+             Keep it identical to LAUNCHER_ALIAS_CLASS in SettingsRepositoryImpl. -->
         <activity-alias
-            android:name=".ui.LauncherActivity"
+            android:name="com.langsu.manager.ui.LauncherActivity"
             android:enabled="true"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"
