@@ -23,7 +23,10 @@ use crate::{assets, boot_patch};
 const ARM64_IMAGE_MAGIC_OFFSET: usize = 0x38;
 const ARM64_IMAGE_MAGIC: &[u8; 4] = b"ARM\x64";
 const ARM64_IMAGE_SIZE_OFFSET: usize = 0x10;
-const CAPSULE_MAGIC: &[u8; 8] = b"LANGSULKM1\0";
+// 8 bytes exactly - the capsule header has a fixed layout and this value is also
+// exported as a u64 symbol ("langsu_capsule_magic"). The upstream value was
+// b"KSULKM1\0"; renaming it to any longer string breaks the array length.
+const CAPSULE_MAGIC: &[u8; 8] = b"LSUMAGIC";
 const CAPSULE_VERSION: u32 = 2;
 const CAPSULE_ALIGNMENT: usize = 4096;
 const CAPSULE_HEADER_SIZE: usize = 112;

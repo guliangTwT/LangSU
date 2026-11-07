@@ -26,7 +26,10 @@
 #include "infra/su_mount_ns.h"
 #include "feature/shell_su_adb_only.h"
 
-#define FILE_MAGIC 0x7f4b5355 // ' LANGSU', u32
+// Persisted big-endian magic at the head of .allowlist. The bytes are 0x7f 'K' 'S' 'U';
+// the value is left as-is from upstream on purpose so existing allowlist files keep
+// loading. Only the comment was wrong before (a rename made it claim "LANGSU").
+#define FILE_MAGIC 0x7f4b5355 // 0x7f 'KSU', u32
 #define FILE_FORMAT_VERSION 4 // u32
 
 #define LANGSU_APP_PROFILE_PRESERVE_UID 9999 // NOBODY_UID
