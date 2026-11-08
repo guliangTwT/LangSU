@@ -57,7 +57,7 @@ internal suspend fun isDownloadAvailable(uri: Uri): Boolean = withContext(Dispat
  * The self-hosted manifest is the last resort so a simultaneous outage of both forges still
  * leaves the app able to advertise an update.
  */
-private const val GITHUB_LATEST_URL = "https://api.github.com/repos/GuLiang-I/LangSU/releases/latest"
+private const val GITHUB_LATEST_URL = "https://api.github.com/repos/guliangTwT/LangSU/releases/latest"
 private const val CODEBERG_LATEST_URL = "https://codeberg.org/api/v1/repos/GuLiang/LangSU/releases/latest"
 private const val UPDATE_MANIFEST_URL = "https://guliang.me/langsu/updates/latest.json"
 

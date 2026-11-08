@@ -4,7 +4,7 @@
 
 - 改造后工程：`KernelSU-3.3.1/`
 - 原工程备份：`../_backup_KernelSU-3.3.1/`（未改动）
-- 仓库：<https://github.com/GuLiang-I/LangSU>（镜像：<https://codeberg.org/GuLiang/LangSU>）
+- 仓库：<https://github.com/guliangTwT/LangSU>（镜像：<https://codeberg.org/GuLiang/LangSU>）
 
 ---
 
@@ -201,7 +201,7 @@ GitHub 为主源，Codeberg 做镜像；任何一个不可用都不影响另一�
 
 | 位置 | 角色 | 内容 |
 | --- | --- | --- |
-| GitHub Releases（`GuLiang-I/LangSU`） | 主源 | 管理器 APK、`lkm-*_langsu.ko`、`langsud-*`、`langsuinit` |
+| GitHub Releases（`guliangTwT/LangSU`） | 主源 | 管理器 APK、`lkm-*_langsu.ko`、`langsud-*`、`langsuinit` |
 | Codeberg Releases（`GuLiang/LangSU`） | 镜像 | 同一批产物 |
 | 自建通道 `https://guliang.me/langsu/updates/` | 补充 | 管理器 APK + `latest.json` 清单 |
 

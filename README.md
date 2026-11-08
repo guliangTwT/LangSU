@@ -12,7 +12,7 @@ KernelSU authors.** Please do not report LangSU problems to the upstream project
 
 ## Download
 
-- GitHub Releases（主源）：<https://github.com/GuLiang-I/LangSU/releases>
+- GitHub Releases（主源）：<https://github.com/guliangTwT/LangSU/releases>
 - Codeberg Releases（镜像）：<https://codeberg.org/GuLiang/LangSU/releases>
 - 自建通道（管理器 APK + SHA-256）：<https://guliang.me/langsu/updates/>
 
