@@ -36,6 +36,9 @@ on:
       - 'Cargo.lock'
       - 'Cargo.toml'
   workflow_call:
+  # Lets the pipeline be re-run from the Actions tab or by `gh workflow run` without
+  # pushing a code change (the build is expensive and the path filter is narrow).
+  workflow_dispatch:
 
 jobs:
   generate-key:
