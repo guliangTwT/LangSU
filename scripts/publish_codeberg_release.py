@@ -13,9 +13,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
 import uuid
 from pathlib import Path
@@ -26,9 +28,23 @@ OWNER = "GuLiang"
 REPO = "LangSU"
 API = f"https://codeberg.org/api/v1/repos/{OWNER}/{REPO}"
 
+# See publish_github_release.py: the dead system proxy would break every request.
+OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+
 
 def read_token() -> str:
-    """Pull the token that git already stored for codeberg.org."""
+    """Token from the environment, ~/.codeberg-token, or the git credential vault."""
+    for name in ("CODEBERG_TOKEN", "GITEA_TOKEN"):
+        value = os.environ.get(name, "").strip()
+        if value:
+            return value
+
+    token_file = Path.home() / ".codeberg-token"
+    if token_file.is_file():
+        value = token_file.read_text(encoding="utf-8").strip()
+        if value:
+            return value
+
     script = r"""
 Add-Type -TypeDefinition @"
 using System;
@@ -62,7 +78,9 @@ public class CredX {
     )
     token = result.stdout.strip()
     if not token:
-        raise SystemExit("no Codeberg token in the credential vault; run `git push` once first")
+        raise SystemExit(
+            "no Codeberg token; set CODEBERG_TOKEN or write ~/.codeberg-token"
+        )
     return token
 
 
@@ -73,7 +91,7 @@ def api(method: str, path: str, token: str, payload: dict | None = None) -> dict
         data = json.dumps(payload).encode()
         headers["Content-Type"] = "application/json"
     request = urllib.request.Request(API + path, data=data, headers=headers, method=method)
-    with urllib.request.urlopen(request, timeout=120) as response:
+    with OPENER.open(request, timeout=120) as response:
         body = response.read()
     return json.loads(body) if body else {}
 
@@ -96,7 +114,7 @@ def upload(asset_path: Path, release_id: int, token: str) -> None:
         },
         method="POST",
     )
-    with urllib.request.urlopen(request, timeout=600) as response:
+    with OPENER.open(request, timeout=600) as response:
         print(f"  uploaded {asset_path.name} ({response.status})")
 
 

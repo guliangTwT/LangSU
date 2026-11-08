@@ -30,3 +30,10 @@ __pycache__
 # Signing material (keystore + password) lives outside the repo
 /signing
 
+# Local publish bookkeeping (see the github-publish / codeberg-publish skills)
+.local
+.github-publish.json
+.codeberg-publish.json
+.github-token
+.codeberg-token
+
