@@ -10,6 +10,15 @@ KernelSU.
 **This is an unofficial fork. It is not affiliated with, endorsed by, or supported by the
 KernelSU authors.** Please do not report LangSU problems to the upstream project.
 
+## Download
+
+- 下载页（管理器 APK + SHA-256）：<https://guliang.me/langsu/updates/>
+- 更新清单：<https://guliang.me/langsu/updates/latest.json>
+- 源码：<https://codeberg.org/GuLiang/LangSU>
+
+管理器内置 8 个 KMI 版本的内核模块（android12-5.10 到 android17-6.18），拿到 root 后
+直接在管理器里安装，不用另外找 `.ko`。
+
 ## What is different
 
 | | KernelSU 3.3.1 | LangSU |
@@ -46,10 +55,10 @@ works as in upstream. Module ZIPs and `module.prop` semantics are unchanged.
 ## Status
 
 The Manager app builds and runs; it was checked on an Android 15 (API 35) x86_64 emulator:
-cold start, launcher hiding, the secret-code entry and the notification entry were
-verified. **The kernel side has not been compiled or flashed in this environment** - no
-device was available with a matching KMI, and building the module needs a full kernel
-tree. Treat the kernel and the Rust daemon as source-only until you build them yourself.
+cold start, launcher hiding, the secret-code entry, the notification entry and the
+self-hosted update check were verified. The kernel modules are built by CI
+(`.forgejo/workflows`, DDK containers, 8 KMIs) and are bundled inside the released APK;
+they have **not** been flashed here - no device with a matching KMI was available.
 
 ## Building
 

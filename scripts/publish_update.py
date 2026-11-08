@@ -17,9 +17,11 @@ from __future__ import annotations
 import hashlib
 import html
 import json
+import shutil
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from string import Template
 
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / "dist"
@@ -76,12 +78,12 @@ def collect_assets(version: str) -> list[dict]:
     return assets
 
 
-PAGE = """<!DOCTYPE html>
+PAGE = Template("""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LangSU {version} 下载</title>
+<title>LangSU $version 下载</title>
 <style>
   :root { color-scheme: light dark; }
   * { box-sizing: border-box; }
@@ -124,15 +126,15 @@ PAGE = """<!DOCTYPE html>
 
   <div class="card">
     <h2>最新版本</h2>
-    <div class="ver">{version}</div>
-    <p class="muted">发布于 {published}</p>
-    {downloads}
+    <div class="ver">$version</div>
+    <p class="muted">发布于 $published</p>
+    $downloads
   </div>
 
   <div class="card">
     <h2>校验</h2>
     <p class="muted">下载后可以核对 SHA-256：</p>
-    {hashes}
+    $hashes
   </div>
 
   <div class="card">
@@ -148,13 +150,13 @@ PAGE = """<!DOCTYPE html>
   <div class="card links">
     <h2>链接</h2>
     <p>源码：<a href="https://codeberg.org/GuLiang/LangSU">codeberg.org/GuLiang/LangSU</a></p>
-    <p>更新日志：<a href="{notes_url}">notes/{version}.md</a></p>
+    <p>更新日志：<a href="$notes_url">notes/$version.md</a></p>
     <p class="muted">基于 KernelSU（GPL-2.0）修改，与上游作者没有隶属关系。</p>
   </div>
 </main>
 </body>
 </html>
-"""
+""")
 
 
 def main() -> int:
@@ -166,6 +168,13 @@ def main() -> int:
     DIST.mkdir(parents=True, exist_ok=True)
     (DIST / "notes").mkdir(exist_ok=True)
     (DIST / "versions").mkdir(exist_ok=True)
+    files_dir = DIST / "files" / version
+    files_dir.mkdir(parents=True, exist_ok=True)
+    for asset in assets:
+        source = DIST / asset["name"]
+        target = files_dir / asset["name"]
+        if not target.exists() or target.stat().st_size != source.stat().st_size:
+            shutil.copy2(source, target)
 
     manifest = {
         "schema": 1,
@@ -188,7 +197,7 @@ def main() -> int:
     hashes = "\n    ".join(
         f'<code>{html.escape(a["name"])}<br>{a["sha256"]}</code>' for a in assets
     )
-    page = PAGE.format(
+    page = PAGE.substitute(
         version=html.escape(version),
         published=html.escape(published),
         downloads=downloads,
