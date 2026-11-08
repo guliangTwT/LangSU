@@ -1,27 +1,19 @@
 # 更新日志
 
-## 1.0.3（2026-11-08）
+版本号从 1.0.0 重新开始。之前的 1.0.0 / 1.0.1 / 1.0.3 是迁移过程中的中间产物，
+不再作为对外版本；对应 APK 留在 `dist/archive/` 里备查。
 
-- 更新检查改为优先读取自建清单（guliang.me），GitHub 停用后改由 Codeberg Releases 兜底
-- 更新提示改为显示版本号（如 1.0.3），不再显示内部版本码
-- 发布产物迁移到自建下载通道，附带 SHA-256 校验值
-- 内置 8 个 KMI 版本的内核模块，安装时自动匹配
+## 1.0.0（2026-11-08）
 
-## 1.0.2（2026-11-07）
+首个正式版本。
 
-- 内置全部内核模块，修复「安装时找不到模块」的问题
-- 修复 kernel/include/uapi 符号链接丢失导致的内核编译失败
-- 修复 gradlew 等脚本可执行位丢失
-- 修复 CAPSULE_MAGIC 长度超限导致的 langsud 编译失败
-
-## 1.0.1（2026-11-07）
-
-- 配置 LangSU 专用签名证书，内核签名指纹与之匹配
-- 中文界面改为猫娘语气（64 条），技术信息保持原样
-- 补全字号/行高/字距，底部导航改用短标签
-
-## 1.0.0（2026-11-07）
-
-- 基于 KernelSU 3.3.1 完成 LangSU 改名（包名、模块、daemon、数据目录、SELinux domain）
-- 新增桌面图标隐藏与暗码找回
-- 萌粉主题与图标
+- 基于 KernelSU 3.3.1 完成改名：包名 `com.langsu.manager`、内核模块 `langsu.ko`、
+  daemon `langsud`、数据目录 `/data/adb/langsu`、SELinux domain `u:r:langsu:s0`
+- 桌面图标隐藏，拨号盘 `*#*#5264#*#*` 找回（重新启用图标 + 发通知）
+- 萌粉主题，中文界面改为猫娘语气，技术信息（版本号、路径、报错）保持原样
+- 内置 8 个 KMI 版本的内核模块（android12-5.10 ~ android17-6.18），拿到 root 后
+  在管理器里直接安装，自动按设备 KMI 匹配
+- 更新检查：GitHub Releases 为主源，GitHub 不可达时退到 Codeberg Releases，
+  两者都失败再读自建清单 `guliang.me/langsu/updates/latest.json`
+- 更新提示显示版本号，并附带发布产物的 SHA-256
+- 源码：GitHub 主仓，Codeberg 镜像

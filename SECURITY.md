@@ -3,11 +3,12 @@
 LangSU is an unofficial fork of KernelSU. Please do not send LangSU findings to the
 KernelSU authors or to their security advisory channel - they do not maintain this code.
 
-To report an issue in LangSU, open a private security advisory on this repository:
+To report an issue in LangSU, open a private security advisory on the GitHub repository:
 
-<https://codeberg.org/GuLiang/LangSU/security/advisories/new>
+<https://github.com/GuLiang-I/LangSU/security/advisories/new>
 
-or open a regular issue if the problem is not sensitive.
+(a Codeberg mirror lives at <https://codeberg.org/GuLiang/LangSU>; use GitHub if both are
+reachable) or open a regular issue if the problem is not sensitive.
 
 Please include the version shown in the Manager's About screen, the device and kernel
 version, and the steps needed to reproduce.

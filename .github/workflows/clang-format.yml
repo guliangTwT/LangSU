@@ -6,7 +6,7 @@ on:
       - 'main'
       - 'dev'
     paths:
-      - '.forgejo/workflows/clang-format.yml'
+      - '.github/workflows/clang-format.yml'
       - 'kernel/**/*.c'
       - 'kernel/**/*.h'
   pull_request:
@@ -14,7 +14,7 @@ on:
       - 'main'
       - 'dev'
     paths:
-      - '.forgejo/workflows/clang-format.yml'
+      - '.github/workflows/clang-format.yml'
       - 'kernel/**/*.c'
       - 'kernel/**/*.h'
       - 'kernel/.clang-format'

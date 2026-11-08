@@ -4,9 +4,9 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
 }
 
-// Versioning: keep the KernelSU scheme (30000 + commit count) so upgrades stay ordered,
-// but never fail the build when git is unavailable (release tarballs, CI shallow clones,
-// vendored checkouts). Declared before use: script bodies are evaluated top to bottom.
+// Versioning: the version name comes from the git tag (v1.0.0 -> 1.0.0), the code from the
+// commit count. Never fail the build when git is unavailable (release tarballs, CI shallow
+// clones, vendored checkouts). Declared before use: script bodies run top to bottom.
 val fallbackVersionName = "1.0.0"
 
 /** Runs git and returns its trimmed stdout, or null when git is missing or prints nothing. */
@@ -42,8 +42,23 @@ fun getGitDescribe(): String {
     return sanitizeVersionName(name)
 }
 
-val managerVersionCode: Int = 30000 + getGitCommitCount()
+/**
+ * Version code derived from the version name, `1.0.0` -> 50000, `1.0.1` -> 50100,
+ * `1.2.3` -> 50203. The `40000` floor exists because the version name restarted at 1.0.0
+ * while earlier builds were already published as `30000 + commit count` (30010 and up):
+ * a plain `major*10000 + ...` would give 10000 and such a build could not be installed
+ * over the existing one.
+ */
+fun versionCodeOf(name: String): Int {
+    val parts = name.split('.').map { it.takeWhile(Char::isDigit).toIntOrNull() ?: 0 }
+    val major = parts.getOrElse(0) { 0 }
+    val minor = parts.getOrElse(1) { 0 }
+    val patch = parts.getOrElse(2) { 0 }
+    return 40000 + major * 10000 + minor * 100 + patch
+}
+
 val managerVersionName: String = getGitDescribe()
+val managerVersionCode: Int = versionCodeOf(managerVersionName)
 
 extra["androidMinSdkVersion"] = 31
 extra["androidTargetSdkVersion"] = 37

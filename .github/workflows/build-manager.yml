@@ -4,14 +4,14 @@ on:
   push:
     branches: [ "main", "dev", "ci" ]
     paths:
-      - '.forgejo/workflows/build-manager.yml'
-      - '.forgejo/workflows/build-lkm.yml'
-      - '.forgejo/workflows/ddk-lkm.yml'
-      - '.forgejo/workflows/langsud.yml'
-      - '.forgejo/workflows/langsud-extra.yml'
-      - '.forgejo/workflows/langsuinit.yml'
-      - '.forgejo/scripts/setup-rust-build.sh'
-      - '.forgejo/riscv64-cargo.toml'
+      - '.github/workflows/build-manager.yml'
+      - '.github/workflows/build-lkm.yml'
+      - '.github/workflows/ddk-lkm.yml'
+      - '.github/workflows/langsud.yml'
+      - '.github/workflows/langsud-extra.yml'
+      - '.github/workflows/langsuinit.yml'
+      - '.github/scripts/setup-rust-build.sh'
+      - '.github/riscv64-cargo.toml'
       - 'repack_apk.py'
       - 'manager/**'
       - 'kernel/**'
@@ -21,14 +21,14 @@ on:
   pull_request:
     branches: [ "main", "dev" ]
     paths:
-      - '.forgejo/workflows/build-manager.yml'
-      - '.forgejo/workflows/build-lkm.yml'
-      - '.forgejo/workflows/ddk-lkm.yml'
-      - '.forgejo/workflows/langsud.yml'
-      - '.forgejo/workflows/langsud-extra.yml'
-      - '.forgejo/workflows/langsuinit.yml'
-      - '.forgejo/scripts/setup-rust-build.sh'
-      - '.forgejo/riscv64-cargo.toml'
+      - '.github/workflows/build-manager.yml'
+      - '.github/workflows/build-lkm.yml'
+      - '.github/workflows/ddk-lkm.yml'
+      - '.github/workflows/langsud.yml'
+      - '.github/workflows/langsud-extra.yml'
+      - '.github/workflows/langsuinit.yml'
+      - '.github/scripts/setup-rust-build.sh'
+      - '.github/riscv64-cargo.toml'
       - 'repack_apk.py'
       - 'manager/**'
       - 'kernel/**'
@@ -95,14 +95,14 @@ jobs:
 
   build-lkm:
     needs: generate-key
-    uses: ./.forgejo/workflows/build-lkm.yml
+    uses: ./.github/workflows/build-lkm.yml
     with:
       expected_size: ${{ needs.generate-key.outputs.expected_size || '' }}
       expected_hash: ${{ needs.generate-key.outputs.expected_hash || '' }}
     secrets: inherit
 
   build-langsuinit:
-    uses: ./.forgejo/workflows/langsuinit.yml
+    uses: ./.github/workflows/langsuinit.yml
 
   build-langsud:
     needs: [build-lkm, build-langsuinit]
@@ -112,7 +112,7 @@ jobs:
           - target: aarch64-linux-android
           - target: x86_64-linux-android
           - target: riscv64-linux-android
-    uses: ./.forgejo/workflows/langsud.yml
+    uses: ./.github/workflows/langsud.yml
     with:
       target: ${{ matrix.target }}
       pack_lkm: true
@@ -133,7 +133,7 @@ jobs:
             os: ubuntu-latest
           - target: x86_64-unknown-linux-musl # x86 Linux
             os: ubuntu-latest
-    uses: ./.forgejo/workflows/langsud-extra.yml
+    uses: ./.github/workflows/langsud-extra.yml
     with:
       target: ${{ matrix.target }}
       os: ${{ matrix.os }}

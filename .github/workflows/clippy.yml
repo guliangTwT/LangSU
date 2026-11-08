@@ -6,14 +6,14 @@ on:
       - main
       - dev
     paths:
-      - '.forgejo/workflows/clippy.yml'
+      - '.github/workflows/clippy.yml'
       - 'userspace/**'
   pull_request:
     branches:
       - main
       - dev
     paths:
-      - '.forgejo/workflows/clippy.yml'
+      - '.github/workflows/clippy.yml'
       - 'userspace/**'
 
 env:
@@ -42,7 +42,7 @@ jobs:
         run: |
           rustup target add aarch64-linux-android
           rustup target add x86_64-linux-android
-          source .forgejo/scripts/setup-rust-build.sh aarch64-linux-android 26
-          source .forgejo/scripts/setup-rust-build.sh x86_64-linux-android 26
+          source .github/scripts/setup-rust-build.sh aarch64-linux-android 26
+          source .github/scripts/setup-rust-build.sh x86_64-linux-android 26
           cargo clippy --target aarch64-linux-android --release
           cargo clippy --target x86_64-linux-android --release

@@ -12,12 +12,13 @@ KernelSU authors.** Please do not report LangSU problems to the upstream project
 
 ## Download
 
-- 下载页（管理器 APK + SHA-256）：<https://guliang.me/langsu/updates/>
-- 更新清单：<https://guliang.me/langsu/updates/latest.json>
-- 源码：<https://codeberg.org/GuLiang/LangSU>
+- GitHub Releases（主源）：<https://github.com/GuLiang-I/LangSU/releases>
+- Codeberg Releases（镜像）：<https://codeberg.org/GuLiang/LangSU/releases>
+- 自建通道（管理器 APK + SHA-256）：<https://guliang.me/langsu/updates/>
 
 管理器内置 8 个 KMI 版本的内核模块（android12-5.10 到 android17-6.18），拿到 root 后
-直接在管理器里安装，不用另外找 `.ko`。
+直接在管理器里安装，不用另外找 `.ko`。应用内的更新检查按 GitHub → Codeberg → 自建清单
+的顺序试，哪个能用就用哪个。
 
 ## What is different
 

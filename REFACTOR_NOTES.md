@@ -4,7 +4,7 @@
 
 - 改造后工程：`KernelSU-3.3.1/`
 - 原工程备份：`../_backup_KernelSU-3.3.1/`（未改动）
-- 仓库：<https://codeberg.org/GuLiang/LangSU>
+- 仓库：<https://github.com/GuLiang-I/LangSU>（镜像：<https://codeberg.org/GuLiang/LangSU>）
 
 ---
 
@@ -195,26 +195,39 @@ cd manager && ./gradlew assembleRelease
 - 若与官方 KernelSU 共存，两者包名与数据目录已不同，但同一内核只能装一个 root 方案。
 - 多语言 strings.xml 是从上游继承的翻译，未逐条校对准确性。
 
-## 9. 发布渠道与 Codeberg 迁移
+## 9. 发布渠道
 
-GitHub 账号已停用，仓库改到 Codeberg（`codeberg.org/GuLiang/LangSU`）。构建产物走两条路：
+GitHub 为主源，Codeberg 做镜像；任何一个不可用都不影响另一个。版本号从 `1.0.0` 重新起算。
 
-| 位置 | 内容 |
-| --- | --- |
-| 自建通道 `https://guliang.me/langsu/updates/` | 管理器 APK + `latest.json` 清单，客户端更新检查的首选来源 |
-| Codeberg Releases | 同一批 APK / `lkm-*_langsu.ko` / `langsud-*` / `langsuinit`，兜底来源 |
+| 位置 | 角色 | 内容 |
+| --- | --- | --- |
+| GitHub Releases（`GuLiang-I/LangSU`） | 主源 | 管理器 APK、`lkm-*_langsu.ko`、`langsud-*`、`langsuinit` |
+| Codeberg Releases（`GuLiang/LangSU`） | 镜像 | 同一批产物 |
+| 自建通道 `https://guliang.me/langsu/updates/` | 补充 | 管理器 APK + `latest.json` 清单 |
+
+客户端更新检查的顺序写死在 `Downloader.kt`：GitHub Releases → Codeberg Releases →
+自建清单。三者都失败就静默不提示，不打扰用户。
 
 自建通道目录结构：
 
-- `latest.json`：更新检查读取的唯一文件
+- `latest.json`：清单，字段为 `version`、`notes`、`assets[].name` / `size` / `sha256` / `urls`
 - `files/<版本>/<文件名>`：APK 实体
 - `notes/<版本>.md`：该版本更新日志
 - `versions/<版本>.json`：该版本清单快照
 
-`latest.json` 的字段是 `version`、`notes`、`assets[].name` / `size` / `sha256` / `urls`。
-客户端先读清单，失败再读 Codeberg Releases API，两边都失败就静默不提示。
+生成与上传：
 
-CI 从 `.github/workflows` 迁到 `.forgejo/workflows`（Forgejo Actions）。`release.yml` 用 REST API
-建 Release 并上传附件，需要仓库 secret `CODEBERG_TOKEN`（仓库写权限）；没配置时只构建、不发版。
-GitHub Pages 的站点部署已删除——Codeberg 没有对等 action，站点改为本地 `yarn docs:build`
-后手动上传。内核模块的 DDK 编译镜像仍来自 `ghcr.io`，那是第三方公共镜像，不依赖我们的账号。
+```bash
+python scripts/publish_update.py              # 生成 dist/latest.json、notes/、versions/、index.html
+python scripts/publish_codeberg_release.py    # 用 git 已存的 Codeberg 凭据建 Release 并传附件
+# 自建通道的上传见 REFACTOR_NOTES 里 hk-vhost 的用法（FTP 覆盖写）
+```
+
+CI 保留在 `.github/workflows`（GitHub Actions）。`release.yml` 打 tag 时发 GitHub Release，
+再用 `CODEBERG_TOKEN` 把同一批产物镜像到 Codeberg；没配 secret 就跳过镜像，不影响 GitHub 发布。
+`.github/workflows/deploy-website.yml` 之前删掉了，需要发布文档站时按本地 `yarn docs:build`
+后手工上传。
+
+版本号规则：version name 来自 git tag（`v1.0.0` → `1.0.0`），version code 为
+`40000 + major*10000 + minor*100 + patch`。那个 40000 的底数是必要的：早期对外发布过
+`30000 + 提交数` 的包（30010），如果 version code 掉回 10000，装过旧版的设备无法升级。
